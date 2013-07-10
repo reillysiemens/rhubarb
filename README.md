@@ -3,7 +3,7 @@ rhubarb
 
 A simple, light-weight ping-pong ladder written in Ruby.
 
-#Planned Features/Functionality
+###Planned Features/Functionality
 
 * SQLite Database
 * Ruby on Rails for Web Access
