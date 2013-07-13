@@ -5,7 +5,14 @@ A simple, light-weight ping-pong ladder written in Ruby.
 
 ###Planned Features/Functionality
 
-* SQLite Database
-* Ruby on Rails for Web Access
-* Pluggable Ranking Systems
-* API for Mobile OS Clients
+* Modular configuration of databases and ranking systems
+* Unified API for all clients
+
+###Proposed API Functions
+
+* auth
+* getPlayerInfo
+* getPlayers
+* getGameInfo
+* getGames
+* gameRequest
