@@ -6,7 +6,7 @@ A simple, light-weight, extensible ping-pong ladder written in Ruby.
 ###Planned Features/Functionality
 
 * Modular configuration of databases and ranking systems
-* Unified API for all clients
+* RESTful API via [Sinatra](http://www.sinatrarb.com/).
 
 ###Proposed API Functions
 
