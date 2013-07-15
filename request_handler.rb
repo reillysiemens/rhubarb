@@ -10,32 +10,7 @@ changed during runtime but I'm not sure enough about ruby to even say
 if that is a possibility
 =end
 
-=begin
-def reportGameResults(user, winner, loser, scores_and_stuff?)
-    #if user != winner and user != loser reject!
-    #set up db to ask other player to respond to results
-end
-
-def getGameResults(gameID)
-    #return all info from game in json?
-end
-
-def login(user, password)
-    #this maybe should error on fail
-    #else return a login package that includes getUpdates?
-end
-
-def getUpdates(user)
-    #send a package with any information the user should know about
-    #right now I'm just thinking, games that need approval from them
-end
-
-def acceptGame(user, gameID)
-    #move the game from accepted to game history table, make sure it belongs to the user
-end
-=end
-
-#COMMENTED OUT ABOVE FUNCTIONS UNTIL THEY ARE NOT NEEDED
+#REMOVED ABOVE FUNCTIONS
 
 require('mysql')
 require('json')
@@ -109,7 +84,12 @@ def getPendingGames(player_id)
     return JSON.fast_generate(rows)
 end
 
-def gameRequest(action, winner, loser, winner_score, loser_score)
+#this definitely needs some error handling
+def gameRequest(action, winner, loser, high_score, low_score, player_id, requestee_id)
+    if(action == "new")
+        results = $con.query("insert into rhubarb_pending_games (requested_by, requested_to, timestamp, winner, loser, high_score, low_score) values (" + player_id.to_s + "," + requestee_id.to_s + "," + "NOW() ," + winner.to_s + "," + loser.to_s + "," + high_score.to_s + "," + low_score.to_s + ");")
+        return 0
+    end
 end
 
 $con = Mysql.new($hostname, $username, $password, $database)
@@ -117,4 +97,6 @@ p auth("reilly", "password")
 p getPlayerInfo(0)
 p getPlayers("", 0.0, 5, 0)
 p getGames(0, 1)
+p getPendingGames(0)
+p gameRequest("new", 0, 1, 11, 6, 1, 0)
 p getPendingGames(0)
