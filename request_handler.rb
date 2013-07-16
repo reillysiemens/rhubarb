@@ -21,11 +21,12 @@ require_relative('mysql_connection')
 #although this may be better to handle in the api_server
 
 def auth(username, password)
-    results = $con.query("select login from rhubarb_players where login='" + username +"' AND password='" + password + "';")
+    results = $con.query("select id, login from rhubarb_players where login='" + username +"' AND password='" + password + "';")
     if results.num_rows() == 1
-        return "success!"
+        row = results.fetch_hash
+        return row["id"].to_i
     else
-        return "failure!"
+        return 0
     end
 end
 
@@ -62,6 +63,15 @@ def getGameInfo(game_id)
 end
 
 #this is just.. the worst sql statement ever
+def getGamesByPlayers(name1, name2)
+    results = $con.query("select * from rhubarb_games where (winner=" + name1.to_s + " and loser=" + name2.to_s + ") or (winner=" + name2.to_s + " and loser=" + name1.to_s + ");")
+    rows = Array.new
+    results.each_hash do |row|
+        rows << row
+    end
+    return JSON.fast_generate(rows)
+end
+
 def getGames(name1, name2)
     results = $con.query("select * from rhubarb_games where (winner=" + name1.to_s + " and loser=" + name2.to_s + ") or (winner=" + name2.to_s + " and loser=" + name1.to_s + ");")
     rows = Array.new
@@ -93,10 +103,10 @@ def gameRequest(action, winner, loser, high_score, low_score, player_id, request
 end
 
 $con = Mysql.new($hostname, $username, $password, $database)
-p auth("reilly", "password")
-p getPlayerInfo(0)
-p getPlayers("", 0.0, 5, 0)
-p getGames(0, 1)
-p getPendingGames(0)
-p gameRequest("new", 0, 1, 11, 6, 1, 0)
-p getPendingGames(0)
+#p auth("reilly", "password")
+#p getPlayerInfo(0)
+#p getPlayers("", 0.0, 5, 0)
+#p getGames(0, 1)
+#p getPendingGames(0)
+#p gameRequest("new", 0, 1, 11, 6, 1, 0)
+#p getPendingGames(0)
