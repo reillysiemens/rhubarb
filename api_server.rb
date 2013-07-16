@@ -53,3 +53,7 @@ get '/getPlayerInfo' do
     pid = params[:player_id]
     getPlayerInfo(pid)
 end
+
+get '/getGames' do
+    getTopGames(-1)
+end

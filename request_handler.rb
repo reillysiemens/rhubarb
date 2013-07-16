@@ -72,8 +72,12 @@ def getGamesByPlayers(name1, name2)
     return JSON.fast_generate(rows)
 end
 
-def getGames(name1, name2)
-    results = $con.query("select * from rhubarb_games where (winner=" + name1.to_s + " and loser=" + name2.to_s + ") or (winner=" + name2.to_s + " and loser=" + name1.to_s + ");")
+def getTopGames(top)
+    if top == -1
+        results = $con.query("select * from rhubarb_games order by id desc limit 50")
+    else
+        results = $con.query("select * from rhubarb_games where id<top order by id desc limit 50")
+    end
     rows = Array.new
     results.each_hash do |row|
         rows << row
