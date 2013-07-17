@@ -1,4 +1,5 @@
 require('trollop')
+require('mysql')
 
 opts = Trollop::options do
     opt :db_location,   "Databse server location",  :short=> 'l', :default=> 'localhost'
@@ -53,3 +54,9 @@ CREATE TABLE `rhubarb_players` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 "
+
+#Create a connection to the database with the supplied information
+con = Mysql.new(opts[:db_location], opts[:db_user], opts[:db_password], opts[:db_database])
+
+#Run the initialization command on the database
+con.query(sql_database_init_command)
