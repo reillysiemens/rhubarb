@@ -1,18 +1,25 @@
 rhubarb
 =======
 
-A simple, light-weight, extensible ping-pong ladder written in Ruby.
+A simple, light-weight, extensible ping-pong ladder.
 
 ###Planned Features/Functionality
 
 * Modular configuration of databases and ranking systems
 * RESTful API via [Sinatra](http://www.sinatrarb.com/).
 
-###Proposed API Functions
+###Project Facets
+
+* Server with API
+* Web-based client
+* Android client
+* iOS client
+
+###Current API Functions
 
 * auth
-* getPlayerInfo
-* getPlayers
+* testAuth
+* addNewGame
 * getGameInfo
+* getPlayerInfo
 * getGames
-* gameRequest
