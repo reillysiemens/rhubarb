@@ -53,15 +53,15 @@ get '/addNewGame' do
         action = params[:action]
         winner_id = params[:winner_id]
         loser_id = params[:loser_id]
-        high_score = params[:high_score]
-        low_score = params[:low_score]
+        winner_score = params[:high_score]
+        loser_score = params[:low_score]
         player_id = session['user_id']
         recipient_id = params[:recipient_id]
         pending_game_id = params[:pending_game_id]
 
         #If action is new request a new addition to the pending table
         if (action == "new")
-            gameRequest(action, winner_id, loser_id, high_score, low_score, player_id, recipient_id)
+            gameRequest(action, winner_id, loser_id, winner_score, loser_score, player_id, recipient_id)
         #If action is accept then accept an existing game, move it to games and remove from pending games
         elsif (action == "accept")
             gameAccept(player_id, pending_game_id)
@@ -72,8 +72,8 @@ get '/addNewGame' do
         elsif (action == "cancel")
             gameCancel(player_id, pending_game_id)
         else
+        #NEED TO FINISH OFF THIS OPTION 
         end
-
     end
 end
 
