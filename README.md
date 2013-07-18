@@ -14,12 +14,3 @@ A simple, light-weight, extensible ping-pong ladder.
 * Web-based client
 * Android client
 * iOS client
-
-###Current API Functions
-
-* auth
-* testAuth
-* addNewGame
-* getGameInfo
-* getPlayerInfo
-* getGames
