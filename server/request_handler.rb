@@ -6,6 +6,23 @@ require_relative('db_connection')
 #Initiate a connection to the database defined by mysql_connection.rb
 $con = Mysql.new($hostname, $username, $password, $database)
 
+# PLAYER REQUEST HANDLERS =====================================================
+
+#Inserts a new row into rhubarb_players
+def addPlayer(name, username, password, rating_package, current_rating, status)
+    $con.query("insert into rhubarb_players (name, username, password, rating_package, current_rating, status) values ('" + name.to_s + "','" + username.to_s + "','" + password.to_s + "','" + rating_package.to_s + "','" + current_rating.to_s + "','" + status.to_s + "');")
+end
+
+#Given a player id, sets the player status to enabled.
+def enablePlayer(player_id)
+    $con.query("update rhubarb_players set status=1 where id=" + player_id.to_s + ";")
+end
+
+#Given a player id, sets the players status to disabled.
+def disablePlayer(player_id)
+    $con.query("update rhubarb_players set status=0 where id=" + player_id.to_s + ";")
+end
+
 #Authenticate a user by checking the supplied password and username against the database
 def auth(username, password)
     results = $con.query("select id, username from rhubarb_players where username='" + username +"' AND password='" + password + "';")
@@ -40,6 +57,8 @@ def getPlayers(name, low, high)
         return JSON.fast_generate(rows)
     end
 end
+
+# GAME REQUEST HANDLERS =======================================================
 
 #Get a JSON-formatted string containing info for a particular game_id
 def getGameInfo(game_id)
@@ -76,37 +95,54 @@ def getTopGames(top)
     return JSON.fast_generate(rows)
 end
 
-#Get a list of pending games for player_id and return corresponding JSON
-def getPendingGames(player_id)
-    results = $con.query("select * from rhubarb_pending_games where recipient_id=" + player_id.to_s + ";")
-    rows = Array.new
-    results.each_hash do |row|
-        rows << row
-    end
-    return JSON.fast_generate(rows)
-end
-
-#Request a game by adding the necessary information to pending games in the database
-#ERROR-HANDLING-NEEDED
-def gameRequest(winner, loser, winner_score, loser_score, player_id, recipient_id)
-    results = $con.query("insert into rhubarb_pending_games (sender_id, recipient_id, winner, loser, winner_score, loser_score, timestamp) values (" + player_id.to_s + "," + recipient_id.to_s + "," + winner.to_s + "," + loser.to_s + "," + winner_score.to_s + "," + loser_score.to_s + "," + "NOW());")
+#Given a game_id, swap the values of sender_id and recipient_id for that game
+#NEEDS ERROR HANDLING
+def roleSwap(game_id)
+    results = $con.query("select sender_id, recipient_id from rhubarb_games where id=" + game_id.to_s + ";")
+    row = results.fetch_hash
+    $con.query("update rhubarb_games set sender_id=" + row["recipient_id"].to_s + ", recipient_id=" + row["sender_id"].to_s + " where id=" + game_id.to_s + ";")
     return 0
 end
 
-#Accept a game by moving info in the database from pending games to games provided the request was sent to player_id
-def gameAccept(player_id, pending_game_id)
-    results = $con.query("select * from rhubarb_pending_games where recipient_id=" + player_id.to_s + " and id=" + pending_game_id.to_s+ ";")
-    row = results.fetch_hash
-    $con.query("insert into rhubarb_games (winner, loser, winner_score, loser_score, timestamp) values ('" + row['winner'].to_s + "','" + row['loser'].to_s + "','" + row['winner_score'].to_s + "','" + row['loser_score'].to_s + "','" + row['timestamp'].to_s + "');")
-    $con.query("delete from rhubarb_pending_games where id=" + pending_game_id.to_s + " and recipient_id=" + player_id.to_s + ";")
+#Insert a game into the database
+#NEEDS ERROR HANDLING
+def addGame(winner, loser, winner_score, loser_score, sender_id, recipient_id)
+    $con.query("insert into rhubarb_games (winner, loser, winner_score, loser_score, sender_id, recipient_id, timestamp, state) values (" + winner.to_s + "," + loser.to_s + "," + winner_score.to_s + "," + loser_score.to_s + "," + sender_id.to_s + "," + recipient_id.to_s + "," + Time.now.to_i.to_s + ",0);")
+    return 0
 end
 
-#Cancel a game by removing from the database the game matching pending_game_id if it was also requested by player_id
-def gameCancel(player_id, pending_game_id)
-    $con.query("delete from rhubarb_pending_games where id=" + pending_game_id.to_s + " and sender_id=" + player_id.to_s + ";")
+#Remove a game from the database
+#NEEDS ERROR HANDLING
+def removeGame(game_id)
+    $con.query("delete from rhubarb_games where id=" + game_id.to_s + ";")
+    return 0
 end
 
-#Decline a game by removing from the database the game matching pending_game_id if it was also sent to player_id
-def gameDecline(player_id, pending_game_id)
-    $con.query("delete from rhubarb_pending_games where id=" + pending_game_id.to_s + " and recipient_id=" + player_id.to_s + ";")
+#Set the state of a given game to accepted
+#NEEDS ERROR HANDLING
+def acceptGame(game_id)
+    $con.query("update rhubarb_games set state=1 where id=" + game_id.to_s + ";")
+    return 0
+end
+
+#Verify a user has permissions to edit a particular game
+#UNFINISHED
+def checkPermissions(player_id, game_id)
+end
+
+#Update an existing game with new information
+#UNFINISHED
+def editGame(game_id)
+end
+
+# RATING REQUEST HANDERS  =====================================================
+
+#Add a rating to the database
+#UNFINISHED
+def addRating()
+end
+
+#Get information about a rating from the database
+#UNFINISHED
+def getRatings()
 end
