@@ -6,6 +6,52 @@ require_relative('db_connection')
 #Initiate a connection to the database defined by mysql_connection.rb
 $con = Mysql.new($hostname, $username, $password, $database)
 
+
+def newUser(name, username, password)
+    ratings_package = "0"; #todo - set ratings package based on rating system selected
+    current_rating = "0"; #todo - set current rating based on rating system selected
+    status = "1"
+
+    queryString = "insert into rhubarb_players(name, username, password, rating_package, current_rating, status) values(";
+    queryString += name.to_s + "','";
+    queryString += username.to_s + "','";
+    queryString += password.to_s + "','";
+    queryString += ratings_package.to_s + "','";
+    queryString += current_rating.to_s + "','";
+    queryString += status.to_s + ");"
+    res = $con.query(queryString)
+
+    return True
+end
+
+def auth(username, password)
+    results = $con.query("select id, username from rhubarb_players where username='" + username +"' AND password='" + password + "';")
+    if results.num_rows() == 1
+        row = results.fetch_hash
+        uid = row["id"].to_i
+        return True
+    else
+        return False
+    end
+end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 # PLAYER REQUEST HANDLERS =====================================================
 
 #Inserts a new row into rhubarb_players
