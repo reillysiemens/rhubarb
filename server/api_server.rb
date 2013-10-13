@@ -24,6 +24,14 @@ get '/' do
     "Rhubarb says hello!"
 end
 
+get '/newUser' do                   
+    name = params[:name]
+    username = params[:username]
+    password = params[:password]
+    newUser(name, username, password)
+    #addPlayer(name, username, password, "0", "0", "1")
+end
+
 #Authentication
 get '/auth' do
     u = params[:username]
@@ -31,9 +39,9 @@ get '/auth' do
     r = auth(u, p)
     session['user_id'] = r
     if r > 0
-        "Logged in"
+        "{result:success}"
     else
-        "Login failure"
+        "{result:failure}"
     end
 end
 
@@ -42,14 +50,8 @@ get '/testAuth' do
     checkLogin().to_s
 end
 
-get '/newUser' do
-    name = params[:name]
-    username = params[:username]
-    password = params[:password]
-    addPlayer(name, username, password, "0", "0", "1")
-end
 
-get '/newGame' do
+get '/addGame' do
     if !checkLogin()
         badLoginResponse()
         return
@@ -67,7 +69,19 @@ get '/acceptGame' do
     acceptGame(session['user_id'], game_id)
 end
 
+get '/getPendingGames' do
+    getPendingGames(session['user_id'])
+end
 
+get '/getAllgames' do
+    getAllGames()
+end
+
+get '/getUser' do
+    username = params[:username]
+    getUser(username)
+end
+=begin
 #Forward new game requests to the request handler
 get '/addNewGame' do
 
@@ -119,3 +133,4 @@ end
 get '/getGames' do
     getTopGames(-1)
 end
+=end

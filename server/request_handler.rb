@@ -24,34 +24,95 @@ def newUser(name, username, password)
     return True
 end
 
+
+
 def auth(username, password)
     results = $con.query("select id, username from rhubarb_players where username='" + username +"' AND password='" + password + "';")
     if results.num_rows() == 1
         row = results.fetch_hash
         uid = row["id"].to_i
-        return True
+        return uid
     else
         return False
     end
 end
 
 
+def addGame(user_id, user_score, other_score, other_user)
+    queryString = "select id from rhubarb_players where username='" + other_user + "';"
+    results = $con.query(queryString)
+    row = results.fetch_hash
+    other_id = row["id"]
+    if(user_score > other_score)
+        winner = user_id;
+        winner_score = user_score;
+        loser = other_id;
+        loser_score = other_score;
+    else
+        winner = other_user;
+        winner_score = other_id;
+        loser = user_id;
+        loser_score = user_score;
+    end
+    queryString = "insert into rhubarb_games (winner, loser, winner_score, loser_score, sender_id, recipient_id, timestamp, state) values ("
+    queryString += winner.to_s + ","
+    queryString += loser.to_s + ","
+    queryString += winner_score.to_s + ","
+    queryString += loser_score.to_s + ","
+    queryString += sender_id.to_s + ","
+    queryString += recipient_id.to_s + ","
+    queryString += Time.now.to_i.to_s + ",0);"
+
+    $con.query(queryString)
+end
 
 
 
+def acceptGame(user_id, game_id)
+    queryString = "select * from rhubarb_games where id='" + game_id.to_s + "' AND recipient_id='" + user_id.to_s + "';"
+    results = $con.query(queryString);
+    if (results.num_rows() == 1)
+        queryString = "update rhubarb_games set state=1 where id=" + game_id.to_s + ";"
+        $con.query(queryString)
+        return True;
+    else
+        return False;
+    end
+end
 
 
 
+def getPendingGames(user_id)
+    queryString = "select * from rhubarb_games where recipient_id='" + user_id.to_s + "' AND state=0;"
+    results = $con.query(queryString);
+    rows = Array.new
+    results.each_hash do |row|
+        rows << row
+    end
+    return JSON.fast_generate(rows)
+end
 
 
+def getAllGames()
+    queryString = "select * from rhubarb_games where state=1"
+    results = $con.query(queryString)
+    rows = Array.new
+    results.each_hash do |row|
+        rows << row
+    end
+    return JSON.fast_generate(rows)
+end
 
 
-
-
-
-
-
-
+def getUser(username)
+    results = $con.query("select name, username, rating_package, rating from rhubarb_players where username='" + username.to_s + "';")
+    if results.num_rows() == 0
+        return "no player"
+    end
+    row = results.fetch_hash
+    return JSON.fast_generate(row)
+end
+=begin
 # PLAYER REQUEST HANDLERS =====================================================
 
 #Inserts a new row into rhubarb_players
@@ -205,3 +266,4 @@ end
 #UNFINISHED
 def getRatings()
 end
+=end
