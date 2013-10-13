@@ -1,7 +1,7 @@
 ##/auth
 ###Parameters:
 * username
-* password
+* password  
 ###Response:
 * Logged in
 * Login failure
