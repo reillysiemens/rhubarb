@@ -106,16 +106,29 @@ end
 
 #Insert a game into the database
 #NEEDS ERROR HANDLING
-def addGame(winner, loser, winner_score, loser_score, sender_id, recipient_id)
+def addGame(user_id, user_score, other_score, recipient_id)
+    if(user_score > other_score)
+        winner = user_id;
+        loser = recipient_id;
+        winner_score = user_score;
+        loser_score = other_score;
+    else
+        winner = recipient_id;
+        loser = user_id;
+        winner_score = user_score;
+        loser_score = other_score;
+    end
+    sender_id = user_id;
     $con.query("insert into rhubarb_games (winner, loser, winner_score, loser_score, sender_id, recipient_id, timestamp, state) values (" + winner.to_s + "," + loser.to_s + "," + winner_score.to_s + "," + loser_score.to_s + "," + sender_id.to_s + "," + recipient_id.to_s + "," + Time.now.to_i.to_s + ",0);")
-    return 0
+    #should this return the game id?
+    return True
 end
 
 #Remove a game from the database
 #NEEDS ERROR HANDLING
 def removeGame(game_id)
     $con.query("delete from rhubarb_games where id=" + game_id.to_s + ";")
-    return 0
+    return True
 end
 
 #Set the state of a given game to accepted

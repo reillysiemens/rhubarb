@@ -1,56 +1,48 @@
-##/auth
-###Parameters:
-* username
-* password  
+#/newUser
 
-###Response:
-* Logged in
-* Login failure
-
-Should be updated to respond with something better
-
-##/testAuth
 ###Parameters
-###Response
+* name
+* username
+* password
 
-##/addGame
-###Parameters:
+
+#/auth
+
+###Parameters
+* username
+* password
+
+
+#/addGame
+
+###Parameters
 * user_score
 * other_score
-* recipient_id
+* other_user
 
-###Response:
-* Success
-* Failure
 
-Fix me^
+#/acceptGame
 
-##/acceptGame
-###Parameters:
+###Parameters
 * game_id
 
-###Response:
-* Success
-* Failure
 
-fix me^
+#/declineGame
 
-##/declineGame
-###Parameters:
+###Parameters
 * game_id
 
-###Response:
-* Success
-* Failure
 
-fix me^
+#/getGames
 
-##/cancelGame
-###Parameters:
+###Parameters
 * game_id
 
-###Response:
-* Success
-* Failure
+or
+* username
 
-fix me^
+
+#/getUser
+
+###Parameters
+* username

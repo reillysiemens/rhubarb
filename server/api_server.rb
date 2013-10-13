@@ -42,6 +42,32 @@ get '/testAuth' do
     checkLogin().to_s
 end
 
+get '/newUser' do
+    name = params[:name]
+    username = params[:username]
+    password = params[:password]
+    addPlayer(name, username, password, "0", "0", "1")
+end
+
+get '/newGame' do
+    if !checkLogin()
+        badLoginResponse()
+        return
+    end
+    user_score = params[:user_score]
+    other_score = params[:other_score]
+    recipient_id = params[:recipient_id]
+    # Clean input
+    # Check userid
+    newGame(session['user_id'], user_score, other_score, recipient_id)
+end
+
+get '/acceptGame' do
+    game_id = params[:game_id]
+    acceptGame(session['user_id'], game_id)
+end
+
+
 #Forward new game requests to the request handler
 get '/addNewGame' do
 
