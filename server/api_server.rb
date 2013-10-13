@@ -58,10 +58,10 @@ get '/addGame' do
     end
     user_score = params[:user_score]
     other_score = params[:other_score]
-    recipient_id = params[:recipient_id]
+    other_user = params[:other_user]
     # Clean input
     # Check userid
-    newGame(session['user_id'], user_score, other_score, recipient_id)
+    addGame(session['user_id'], user_score, other_score, other_user)
 end
 
 get '/acceptGame' do
@@ -73,7 +73,7 @@ get '/getPendingGames' do
     getPendingGames(session['user_id'])
 end
 
-get '/getAllgames' do
+get '/getAllGames' do
     getAllGames()
 end
 

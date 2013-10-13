@@ -12,16 +12,19 @@ def newUser(name, username, password)
     current_rating = "0"; #todo - set current rating based on rating system selected
     status = "1"
 
-    queryString = "insert into rhubarb_players(name, username, password, rating_package, current_rating, status) values(";
+    #check if we are allowed
+    # query and look for username already exists
+
+    queryString = "insert into rhubarb_players(name, username, password, rating_package, current_rating, status) values('";
     queryString += name.to_s + "','";
     queryString += username.to_s + "','";
     queryString += password.to_s + "','";
     queryString += ratings_package.to_s + "','";
     queryString += current_rating.to_s + "','";
-    queryString += status.to_s + ");"
+    queryString += status.to_s + "');"
     res = $con.query(queryString)
 
-    return True
+    return "{\"result\":\"sucecss\"}"
 end
 
 
@@ -33,7 +36,7 @@ def auth(username, password)
         uid = row["id"].to_i
         return uid
     else
-        return False
+        return false
     end
 end
 
@@ -54,14 +57,15 @@ def addGame(user_id, user_score, other_score, other_user)
         loser = user_id;
         loser_score = user_score;
     end
-    queryString = "insert into rhubarb_games (winner, loser, winner_score, loser_score, sender_id, recipient_id, timestamp, state) values ("
-    queryString += winner.to_s + ","
-    queryString += loser.to_s + ","
-    queryString += winner_score.to_s + ","
-    queryString += loser_score.to_s + ","
-    queryString += sender_id.to_s + ","
-    queryString += recipient_id.to_s + ","
-    queryString += Time.now.to_i.to_s + ",0);"
+    queryString = "insert into rhubarb_games (winner, loser, winner_score, loser_score, sender_id, recipient_id, timestamp, state) values ('"
+    queryString += winner.to_s + "','"
+    queryString += loser.to_s + "','"
+    queryString += winner_score.to_s + "','"
+    queryString += loser_score.to_s + "','"
+    queryString += user_id.to_s + "','"
+    queryString += other_id.to_s + "','"
+    queryString += Time.now.to_i.to_s + "','0');"
+
 
     $con.query(queryString)
 end
@@ -74,9 +78,9 @@ def acceptGame(user_id, game_id)
     if (results.num_rows() == 1)
         queryString = "update rhubarb_games set state=1 where id=" + game_id.to_s + ";"
         $con.query(queryString)
-        return True;
+        return true;
     else
-        return False;
+        return false;
     end
 end
 
@@ -105,7 +109,7 @@ end
 
 
 def getUser(username)
-    results = $con.query("select name, username, rating_package, rating from rhubarb_players where username='" + username.to_s + "';")
+    results = $con.query("select name, username, rating_package, current_rating from rhubarb_players where username='" + username.to_s + "';")
     if results.num_rows() == 0
         return "no player"
     end
