@@ -6,19 +6,48 @@
 ###Response:
 * Logged in
 * Login failure
+
 Should be updated to respond with something better
 
 ##/testAuth
-###No parameters
+###Parameters
 ###Response
 
-##/addNewGame
+##/addGame
 ###Parameters:
-* action (new, accept, decline, cancel)
-* winner_id
-* loser_id
-* high_score
-* low_score
-* user_id
+* user_score
+* other_score
 * recipient_id
-* pending_game_id
+
+###Response:
+* Success
+* Failure
+
+Fix me^
+
+##/acceptGame
+###Parameters:
+* game_id
+###Response:
+* Success
+* Failure
+
+fix me^
+
+##/declineGame
+###Parameters:
+* game_id
+###Response:
+* Success
+* Failure
+
+fix me^
+
+##/cancelGame
+###Parameters:
+* game_id
+###Response:
+* Success
+* Failure
+
+fix me^
