@@ -28,6 +28,7 @@ Fix me^
 ##/acceptGame
 ###Parameters:
 * game_id
+
 ###Response:
 * Success
 * Failure
@@ -37,6 +38,7 @@ fix me^
 ##/declineGame
 ###Parameters:
 * game_id
+
 ###Response:
 * Success
 * Failure
@@ -46,6 +48,7 @@ fix me^
 ##/cancelGame
 ###Parameters:
 * game_id
+
 ###Response:
 * Success
 * Failure
