@@ -17,16 +17,16 @@ Check to make sure the user is allowed to accept the game first!
 Moves a game from pending to real and updates user ranking
 returns boolean
 
-declineGame(game_id)
+#declineGame(game_id)
 Check to make sure user is allowed to decline the game first!
 Moves a game from pending to declined (deletes it?)
 returns boolean
 
-getGamesByUser(username)
+#getGamesByUser(username)
 to do
 
-getGameById(game_id)
+#getGameById(game_id)
 to do
 
-getUser(username)
+#getUser(username)
 to do
