@@ -1,4 +1,4 @@
-rhubarb
+rhubarb (deprecated in favor of [dropshot](https://github.com/dropshot/dropshot-server))
 =======
 
 A simple, light-weight, extensible ping-pong ladder.
